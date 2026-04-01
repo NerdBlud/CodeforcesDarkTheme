@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Codeforces Dark Theme
-// @version      1.0.0
-// @description  A sleek, performance-optimized dark theme for Codeforces.
+// @name         Codeforces Ultimate Dark Theme
+// @version      1.2.0
+// @description  A sleek, performance-optimized dark theme for Codeforces with JS enforcement and custom logo.
 // @author       Nerdblud
 // @match        https://codeforces.com/*
 // @match        http://codeforces.com/*
@@ -10,61 +10,77 @@
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
 // @run-at       document-start
-// @downloadURL  https://raw.githubusercontent.com/nerdblud/CodeForcesDarkTheme/main/darktheme.user.js
-// @updateURL    https://raw.githubusercontent.com/nerdblud/CodeForcesDarkTheme/main/darktheme.user.js
 // ==/UserScript==
 
 (function () {
     "use strict";
 
-    try {
-        const mainStyles = GM_getResourceText("mainCSS");
-        const syntaxStyles = GM_getResourceText("syntaxCSS");
+    const NEW_LOGO_URL = "https://raw.githubusercontent.com/nerdblud/CodeForcesDarkTheme/main/imgs/new_logo.png";
 
-        if (mainStyles) GM_addStyle(mainStyles);
-        if (syntaxStyles) GM_addStyle(syntaxStyles);
-    } catch (e) {
-        console.error("Codeforces Theme: Failed to load external CSS resources.", e);
-    }
+    const injectStyles = () => {
+        try {
+            const mainStyles = GM_getResourceText("mainCSS");
+            const syntaxStyles = GM_getResourceText("syntaxCSS");
+            if (mainStyles) GM_addStyle(mainStyles);
+            if (syntaxStyles) GM_addStyle(syntaxStyles);
+        } catch (e) {
+            console.error("Codeforces Theme: CSS Injection Failed.", e);
+        }
+    };
+    injectStyles();
 
-    function observeAndStyle(selector, callback) {
-        const observer = new MutationObserver((mutations) => {
-            for (const mutation of mutations) {
-                mutation.addedNodes.forEach(node => {
-                    if (node.nodeType === 1) {
-                        if (node.matches(selector)) callback(node);
-                        node.querySelectorAll(selector).forEach(callback);
+    const forceDark = (el) => {
+        if (!el || !el.style) return;
+
+        if (el.classList.contains('rated-user')) return;
+
+        if (el.tagName === 'IMG') {
+            if (el.src.includes("codeforces-sponsored-by-ton.png") || el.closest('#header')) {
+                if (el.src !== NEW_LOGO_URL) {
+                    el.src = NEW_LOGO_URL;
+                    el.style.filter = "none";
+                    el.style.backgroundColor = "transparent";
+                }
+            }
+            return;
+        }
+
+        const bgColor = window.getComputedStyle(el).backgroundColor;
+        if (bgColor === 'rgb(255, 255, 255)' || bgColor === 'white') {
+            el.style.setProperty('background-color', '#050505', 'important');
+        }
+
+        const textColor = window.getComputedStyle(el).color;
+        if (textColor === 'rgb(0, 0, 0)' || textColor === 'black') {
+            el.style.setProperty('color', '#ffffff', 'important');
+        }
+    };
+
+    const observer = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+            mutation.addedNodes.forEach(node => {
+                if (node.nodeType === 1) {
+                    forceDark(node);
+                    node.querySelectorAll('*').forEach(forceDark);
+
+                    if (node.id === "editor" || node.querySelector("#editor")) {
+                        const editor = node.id === "editor" ? node : node.querySelector("#editor");
+                        editor.classList.remove("ace-chrome");
+                        editor.classList.add("ace-monokai");
                     }
-                });
-            }
-        });
-
-        observer.observe(document.documentElement, {
-            childList: true,
-            subtree: true
-        });
-    }
-
-    observeAndStyle("#editor", (editor) => {
-        editor.classList.remove("ace-chrome");
-        editor.classList.add("ace-monokai");
-
-        const classObserver = new MutationObserver(() => {
-            if (editor.classList.contains("ace-chrome")) {
-                editor.classList.remove("ace-chrome");
-                editor.classList.add("ace-monokai");
-            }
-        });
-        classObserver.observe(editor, { attributes: true, attributeFilter: ["class"] });
+                }
+            });
+        }
     });
 
-    observeAndStyle(".MathJax", (mj) => {
-        mj.style.color = "var(--text-bright)";
+    observer.observe(document.documentElement, {
+        childList: true,
+        subtree: true
     });
 
-    document.addEventListener("DOMContentLoaded", () => {
-        const lava = document.querySelector(".backLava");
-        if (lava) lava.style.opacity = "0.4";
+    window.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.backLava').forEach(lava => lava.style.opacity = "0.2");
+        document.querySelectorAll('div, p, span, td, img').forEach(forceDark);
     });
 
 })();
