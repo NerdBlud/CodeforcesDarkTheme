@@ -1,21 +1,18 @@
 // ==UserScript==
-// @name         Codeforces Ultimate Dark Theme
-// @version      1.2.0
-// @description  A sleek, performance-optimized dark theme for Codeforces with JS enforcement and custom logo.
+// @name         Codeforces Dark Theme (Final Logo Fix)
+// @version      1.3.1
+// @description  A performance dark theme for Codeforces with correct RAW logo replacement.
 // @author       Nerdblud
 // @match        https://codeforces.com/*
-// @match        http://codeforces.com/*
-// @resource     mainCSS   https://raw.githubusercontent.com/nerdblud/CodeForcesDarkTheme/main/main.css
-// @resource     syntaxCSS https://raw.githubusercontent.com/nerdblud/CodeForcesDarkTheme/main/desert.css
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
 // @run-at       document-start
 // ==/UserScript==
 
-(function () {
-    "use strict";
+(function() {
+    'use strict';
 
-    const NEW_LOGO_URL = "https://raw.githubusercontent.com/nerdblud/CodeForcesDarkTheme/main/imgs/new_logo.png";
+    const NEW_LOGO_URL = "https://raw.githubusercontent.com/nerdblud/nerdblud/main/new_logo.png";
 
     const injectStyles = () => {
         try {
@@ -29,58 +26,63 @@
     };
     injectStyles();
 
-    const forceDark = (el) => {
-        if (!el || !el.style) return;
+    const applyGlobalDarkForce = (node) => {
+        if (!node || node.nodeType !== 1) return;
+        if (node.classList.contains('rated-user')) return;
+        if (node.tagName === 'IMG') return;
 
-        if (el.classList.contains('rated-user')) return;
-
-        if (el.tagName === 'IMG') {
-            if (el.src.includes("codeforces-sponsored-by-ton.png") || el.closest('#header')) {
-                if (el.src !== NEW_LOGO_URL) {
-                    el.src = NEW_LOGO_URL;
-                    el.style.filter = "none";
-                    el.style.backgroundColor = "transparent";
-                }
-            }
-            return;
-        }
-
-        const bgColor = window.getComputedStyle(el).backgroundColor;
+        const bgColor = window.getComputedStyle(node).backgroundColor;
         if (bgColor === 'rgb(255, 255, 255)' || bgColor === 'white') {
-            el.style.setProperty('background-color', '#050505', 'important');
+            node.style.setProperty('background-color', '#050505', 'important');
         }
 
-        const textColor = window.getComputedStyle(el).color;
+        const textColor = window.getComputedStyle(node).color;
         if (textColor === 'rgb(0, 0, 0)' || textColor === 'black') {
-            el.style.setProperty('color', '#ffffff', 'important');
+            node.style.setProperty('color', '#ffffff', 'important');
         }
     };
 
-    const observer = new MutationObserver((mutations) => {
-        for (const mutation of mutations) {
-            mutation.addedNodes.forEach(node => {
-                if (node.nodeType === 1) {
-                    forceDark(node);
-                    node.querySelectorAll('*').forEach(forceDark);
+    const runObserver = () => {
+        const observer = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeType === 1) {
+                        applyGlobalDarkForce(node);
+                        node.querySelectorAll('*').forEach(applyGlobalDarkForce);
 
-                    if (node.id === "editor" || node.querySelector("#editor")) {
-                        const editor = node.id === "editor" ? node : node.querySelector("#editor");
-                        editor.classList.remove("ace-chrome");
-                        editor.classList.add("ace-monokai");
+                        if (node.id === "editor" || node.querySelector("#editor")) {
+                            const editor = node.id === "editor" ? node : node.querySelector("#editor");
+                            editor.classList.remove("ace-chrome");
+                            editor.classList.add("ace-monokai");
+                        }
                     }
-                }
-            });
+                });
+            }
+        });
+
+        observer.observe(document.documentElement, {
+            childList: true,
+            subtree: true
+        });
+    };
+    runObserver();
+
+    const replaceLogo = () => {
+        const logoImg = document.querySelector('#header > div:first-child a > img');
+
+        if (logoImg && logoImg.src !== NEW_LOGO_URL) {
+            logoImg.src = NEW_LOGO_URL;
+
+            logoImg.style.filter = "none";
+            logoImg.style.backgroundColor = "transparent";
+
+            logoImg.style.boxShadow = "0 0 15px rgba(255, 255, 255, 0.1)";
+
+            console.log("Codeforces Theme: RAW Logo Swap Successful.");
         }
-    });
+    };
 
-    observer.observe(document.documentElement, {
-        childList: true,
-        subtree: true
-    });
-
-    window.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.backLava').forEach(lava => lava.style.opacity = "0.2");
-        document.querySelectorAll('div, p, span, td, img').forEach(forceDark);
-    });
+    document.addEventListener("DOMContentLoaded", replaceLogo);
+    window.addEventListener('load', replaceLogo);
 
 })();
