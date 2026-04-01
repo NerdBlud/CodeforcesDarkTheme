@@ -1,148 +1,262 @@
-/* main.css - Codeforces Modern Dark Theme (Accessibility Update) */
+/**
+ * Codeforces Modern Dark Theme - Professional Edition
+ * Focus: Accessibility, smooth contrast, and performance.
+ */
 
 :root {
-    --bg-primary: #0d1117;       /* Main background */
-    --bg-secondary: #161b22;     /* Cards, sidebars */
-    --bg-tertiary: #21262d;      /* Higher tiers (hover, code blocks) */
-    --border-color: #30363d;     /* Subtle borders */
-    
-    --text-main: #e6edf3;       
-    --text-muted: #8b949e;       
-    
+    /* Core palette: Smooth, not FFFFFF/000000 */
+    --backgroundGreyColor: #1e1e1e;
+    --tableGreyRow: #2e2e2e;
+    --whiteTextColor: rgb(200, 200, 200);
+    --inputBoxBackgroundBorderColor: #383838;
+    --border-subtle: #444444;
 
-    --link-color: #58a6ff; 
-    --link-visited: #a5d6ff;
-    --link-hover-glow: rgba(88, 166, 255, 0.2);
-
-    --selection-bg: rgba(56, 139, 253, 0.35);
+    /* Logic Colors */
+    --redColorJustPassesA11Y: hsl(0, 100%, 64%);
+    --genericLinkBlueColor: #58a6ff;
+    --genericLinkVisitedBlueColor: #8ab1ff;
+    --accepted-cyan: rgb(78, 209, 253);
+    --passed-green: #00c700;
 }
 
+/* --- 1. GLOBAL LAYOUT & BACKGROUNDS --- */
+
+body:not(.wysiwyg),
+.roundbox,
+.bottom-links,
+.datatable td:not(.dark),
+.datatable td:not(.dark) div.dark,
+.datatable th,
+.datatable > div.dark,
+#facebox .content,
+.talk-content div[id^="history-text-content"],
+.sidebar-menu,
+.sidebox {
+    background: var(--backgroundGreyColor) !important;
+    background-color: var(--backgroundGreyColor) !important;
+    color: var(--whiteTextColor) !important;
+}
+
+/* Page Spacing & Typography */
 body {
-    background-color: var(--bg-primary) !important;
-    color: var(--text-main) !important;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif !important;
-    font-size: 14px !important;
-    line-height: 1.5 !important;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    line-height: 1.6 !important;
 }
 
-::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: var(--bg-primary); }
-::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 5px; }
-::-webkit-scrollbar-thumb:hover { background: #444; }
+.spoiler-content,
+.roundbox.highlight-blue {
+    background-color: #2d2d3a !important;
+}
 
+.topic .content {
+    border-left-color: var(--border-subtle) !important;
+}
 
-a:link:not(.rated-user),
+.comment-table {
+    border-color: var(--border-subtle) !important;
+}
+
+/* --- 2. INPUTS & FORM ELEMENTS --- */
+
+.search,
+.ac_input,
+input[name$="Difficulty"],
+input[type="text"],
+input[type="password"],
+#title,
+#comment,
+textarea,
+select {
+    background-color: var(--inputBoxBackgroundBorderColor) !important;
+    border: 1px solid var(--border-subtle) !important;
+    color: var(--whiteTextColor) !important;
+    border-radius: 4px;
+    padding: 4px 8px;
+}
+
+textarea[name="input"],
+textarea[name="output"],
+#sourceCodeTextarea {
+    background-color: #272822 !important;
+    color: #f8f8f2 !important;
+    font-family: "Consolas", "Monaco", monospace !important;
+}
+
+/* Buttons */
+input[type="submit"],
+input[type="button"],
+input[type="file"],
+button {
+    color: var(--whiteTextColor) !important;
+    background: #4f4f4f !important;
+    border: 1px solid #5a5a5a !important;
+    border-radius: 4px !important;
+    padding: 5px 15px !important;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+input[type="submit"]:hover,
+input[type="button"]:hover {
+    background: #5a5a5a !important;
+    color: #ffffff !important;
+}
+
+/* --- 3. DATA TABLES & STANDINGS --- */
+
+td.dark,
+td.dark div.dark,
+.ttypography tbody tr:hover td,
+.status-frame-datatable tr td.dark {
+    background-color: var(--tableGreyRow) !important;
+}
+
+.datatable,
+.status-frame-datatable {
+    color: var(--whiteTextColor) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: 5px;
+    background-color: #444 !important; /* Acts as border between cells */
+}
+
+/* Row zebra striping for gym/status */
+.datatable tr:nth-child(even) td {
+    background-color: #252525 !important;
+}
+
+/* Highlight own submissions or new messages */
+.standings tr.highlighted-row td,
+table tr.highlighted-row td,
+.highlight-blue,
+.lang-chooser div[style*="background-color: #EAF4FF"] {
+    background-color: #13203a !important;
+    border-top: 1px solid #1e3a5f !important;
+    border-bottom: 1px solid #1e3a5f !important;
+}
+
+/* --- 4. LINKS & NAVIGATION --- */
+
+a {
+    text-decoration: none !important;
+    transition: color 0.1s ease;
+}
+
+.second-level-menu ul li a:link,
+.second-level-menu ul li a:visited,
+span.verdict-unsuccessful-challenge,
+span.cell-rejected,
 a:not([href]):not(.rated-user),
-a.notice:link,
-.problem-statement a,
-.problems tr.rejected-problem td.id a:link,
-.pagination strong {
-    color: var(--link-color) !important;
-    text-decoration: none !important; /* Cleaner look */
-    transition: color 0.1s ease, text-shadow 0.1s ease !important;
+a:link:not(.rated-user) {
+    color: var(--genericLinkBlueColor) !important;
 }
 
 a:visited:not(.rated-user) {
-    color: var(--link-visited) !important;
+    color: var(--genericLinkVisitedBlueColor) !important;
 }
 
 a:hover:not(.rated-user) {
-    color: var(--text-main) !important;
-    text-shadow: 0 0 5px var(--link-hover-glow) !important;
+    color: #58a6ff !important;
+    text-shadow: 0 0 1px rgba(88, 166, 255, 0.5);
 }
 
-a.notice {
-    background-color: var(--bg-tertiary) !important;
-    border: 1px solid var(--border-color) !important;
-    padding: 3px 6px !important;
-    border-radius: 4px !important;
-    color: var(--text-main) !important;
+/* Navigation "Lava" transitions fix */
+ul.second-level-menu-list li:hover a {
+    color: #ffffff !important;
 }
 
-.roundbox, .bottom-links, .sidebar-menu ul li {
-    background-color: var(--bg-secondary) !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: 8px !important;
-    color: var(--text-main) !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+li.selectedLava a:link {
+    color: #ffffff !important;
 }
 
-.sidebox, .sidebar-menu {
-    border: 1px solid var(--border-color) !important;
-    background-color: var(--bg-secondary) !important;
-    border-radius: 6px !important;
-}
+/* --- 5. CODE & PROBLEM STATEMENTS --- */
 
-.datatable, .problems {
-    background: var(--border-color) !important;
-    border-radius: 6px !important;
-    overflow: hidden !important;
-}
-
-.datatable th, .datatable td, .problems td {
-    background-color: var(--bg-secondary) !important;
-    border: none !important;
+pre {
+    background-color: #2b2b2b !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: 4px;
     padding: 10px !important;
-    color: var(--text-main) !important;
 }
 
-.datatable tr:nth-child(even) td, 
-.problems tr:nth-child(even) td {
-    background-color: #12161d !important;
+div.ttypography pre,
+body > pre {
+    color: var(--whiteTextColor) !important;
 }
 
-.datatable tr:hover td, .problems tr:hover td {
-    background-color: var(--bg-tertiary) !important;
-    transition: background 0.1s ease !important;
+div.ttypography .tt,
+.search-help code {
+    color: #ffffff !important;
+    background-color: #333 !important;
+    padding: 2px 4px;
+    border-radius: 3px;
 }
 
-input[type="text"], input[type="password"], textarea, select {
-    background-color: var(--bg-primary) !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: 4px !important;
-    color: var(--text-main) !important;
-    padding: 5px 8px !important;
+/* MathJax Readability */
+div.ttypography .MathJax {
+    filter: invert(1) hue-rotate(180deg) brightness(1.2) !important;
 }
 
-input[type="text"]:focus, textarea:focus {
-    border-color: var(--link-color) !important;
-    outline: none !important;
-    box-shadow: 0 0 0 3px var(--selection-bg) !important;
+.tex-formula {
+    filter: invert(1) hue-rotate(180deg) !important;
 }
 
-input[type="submit"], input[type="button"] {
-    background: var(--bg-tertiary) !important;
-    color: var(--text-main) !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: 4px !important;
-    padding: 5px 12px !important;
-    cursor: pointer !important;
+/* Verdict Colors */
+.standings .cell-accepted,
+.standings .cell-accepted-locked,
+.verdict-accepted {
+    color: var(--accepted-cyan) !important;
 }
 
-input[type="submit"]:hover {
-    background: var(--link-color) !important;
-    color: var(--bg-primary) !important;
+.standings .cell-passed-system-test {
+    color: var(--passed-green) !important;
 }
 
-pre, code, .tt, .problem-statement .test-example-line {
-    background-color: var(--bg-tertiary) !important;
-    color: var(--text-main) !important;
-    font-family: 'Fira Code', 'Cascadia Code', Consolas, monospace !important;
-    font-size: 13px !important;
+.verdict-rejected,
+span.cell-rejected,
+.standings .cell-challenged {
+    color: var(--redColorJustPassesA11Y) !important;
 }
 
-.verdict-accepted, .cell-passed-system-test, .problems tr.accepted-problem td.act {
-    color: #4ed1fd !important; 
+/* --- 6. RATING SYSTEM COLORS --- */
+
+span.user-legendary::first-letter,
+a.user-legendary::first-letter,
+span.user-admin,
+a.user-admin,
+span.user-black,
+a.user-black {
+    color: #ffffff !important;
+    font-weight: bold;
 }
 
-.verdict-rejected, .cell-challenged, .problems tr.rejected-problem td.act {
-    color: #f85149 !important;
+tr.user-blue td, span.user-blue, a.user-blue { color: #757dff !important; }
+tr.user-red td, span.user-red, a.user-red, span.user-legendary, a.user-legendary { color: var(--redColorJustPassesA11Y) !important; }
+tr.user-cyan td, span.user-cyan, a.user-cyan { color: #01bdb2 !important; }
+tr.user-violet td, span.user-violet, a.user-violet { color: #ce8aff !important; }
+tr.user-gray td, span.user-gray, a.user-gray { color: #8c8c8c !important; }
+tr.user-green td, span.user-green, a.user-green { color: #00c700 !important; }
+
+/* --- 7. MISC UI FIXES --- */
+
+/* Scrollbars */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--backgroundGreyColor); }
+::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #555; }
+
+/* Remove Legacy Image Borders */
+.roundbox-lt, .roundbox-lb, .roundbox-rt, .roundbox-rb,
+.datatable .lt, .datatable .lb, .datatable .rt, .datatable .rb {
+    display: none !important;
 }
 
-.second-level-menu-list li a {
-    color: var(--text-muted) !important;
+/* Google Calendar Fix */
+.CalendarPage_calendar {
+    filter: invert(90%) hue-rotate(180deg);
+    background: #191919;
 }
 
-.second-level-menu-list li:hover a, .selectedLava a {
-    color: var(--link-color) !important;
+/* Logo protection */
+#header > div:first-child img, ._logo_div img {
+    background-color: transparent !important;
+    filter: brightness(0.9);
 }
