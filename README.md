@@ -1,6 +1,6 @@
 # Codeforces Dark Theme
 
-A performance-optimized, modular dark theme for Codeforces. [**Click to install**](https://github.com/nerdblud/codeforces-darktheme/raw/master/darktheme.user.js) (requires a userscript manager).
+A performance-optimized, modular dark theme for Codeforces. [**Click to install**](https://github.com/nerdblud/CodeForcesDarkTheme/raw/master/darktheme.user.js) (requires a userscript manager).
 
 ![screenshot of home page](./imgs/screenshot.png)
 
