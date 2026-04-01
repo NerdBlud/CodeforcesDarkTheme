@@ -4,7 +4,7 @@
     --bg-elevated: #161b22;      /* Hover states, inputs */
     --bg-accent: #1f2937;        /* Header/Nav emphasis */
 
-    --text-primary: #f0f6fc;     /* High-contrast reading white */
+    --text-primary: #ffffff;     /* High-contrast reading white */
     --text-secondary: #8b949e;   /* Muted meta-text */
     --text-link: #58a6ff;        /* GitHub-style blue */
     --text-link-visited: #a5d6ff;
@@ -37,6 +37,9 @@ html, body {
     border-color: var(--border-main) !important;
 }
 
+p {
+    color: var(--text-primary) !important;
+}
 
 .roundbox, .sidebox, .sidebar-menu, .bottom-links, .datatable, .status-frame-datatable {
     background-color: var(--bg-card) !important;
