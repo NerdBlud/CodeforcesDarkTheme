@@ -1,0 +1,60 @@
+
+pre.prettyprint {
+    display: block !important;
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-main) !important;
+    padding: 15px !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px !important;
+    font-family: 'Fira Code', 'Cascadia Code', Consolas, monospace !important;
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+}
+
+.prettyprint .pln { color: var(--text-main) !important; } 
+.prettyprint .pun { color: #8b949e !important; }        
+
+.prettyprint .str, 
+.prettyprint .atv { color: #ffa0a0 !important; } 
+
+.prettyprint .kwd, 
+.prettyprint .tag { 
+    color: #f0e68c !important; 
+    font-weight: 600 !important; 
+} 
+
+.prettyprint .com { 
+    color: #79c0ff !important; 
+    font-style: italic !important; 
+} 
+
+.prettyprint .typ { color: #98fb98 !important; } 
+
+.prettyprint .lit { color: #ff7b72 !important; } 
+
+.prettyprint .atn { color: #bdb76b !important; } 
+
+.prettyprint .dec { color: #98fb98 !important; }
+
+ol.linenums {
+    margin: 0 !important;
+    padding-left: 40px !important;
+    color: var(--text-muted) !important;
+    border-left: 1px solid var(--border-color) !important;
+}
+
+li.L0, li.L1, li.L2, li.L3, li.L4, 
+li.L5, li.L6, li.L7, li.L8, li.L9 {
+    list-style-type: decimal !important; 
+    background: transparent !important;
+    padding-left: 10px !important;
+}
+
+li.L1, li.L3, li.L5, li.L7, li.L9 {
+    background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+pre.prettyprint ::selection {
+    background-color: var(--selection-bg) !important;
+    color: #fff !important;
+}
